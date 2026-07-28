@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 const allImages = [
@@ -54,24 +55,89 @@ const videos = [
 ];
 
 const projects = [
-  { tag: 'Residential', name: 'Skyline Residence', img: allImages[0], tall: true },
-  { tag: 'Hospitality', name: 'Harbor Boutique Hotel', img: allImages[3] },
-  { tag: 'Commercial', name: 'Monarch Studio', img: allImages[6] },
-  { tag: 'Luxury Villa', name: 'Vista Pavilion', img: allImages[9], wide: true },
-  { tag: 'Interior', name: 'Amber Penthouse', img: allImages[12] },
-  { tag: 'Mixed Use', name: 'Crown Tower', img: allImages[15], tall: true },
-  { tag: 'Residential', name: 'Pearl Heights', img: allImages[18] },
-  { tag: 'Commercial', name: 'Sapphire Complex', img: allImages[21] },
-  { tag: 'Hospitality', name: 'The Grand Atrium', img: allImages[24], wide: true },
-  { tag: 'Interior', name: 'Ivory Suite', img: allImages[27] },
-  { tag: 'Luxury Villa', name: 'Emerald Estate', img: allImages[30] },
-  { tag: 'Residential', name: 'Onyx Towers', img: allImages[33], tall: true },
-  { tag: 'Commercial', name: 'Platinum Hub', img: allImages[36] },
-  { tag: 'Interior', name: 'Velvet Loft', img: allImages[39] },
-  { tag: 'Hospitality', name: 'Azure Resort', img: allImages[42] },
+  { tag: 'Residential', name: 'Skyline Residence', location: 'Mumbai, Maharashtra', year: '2024', area: '4,200 sq ft', desc: 'A high-end residential VR experience with dramatic light-filled interiors, panoramic city views, and bespoke material finishes crafted for discerning buyers.', img: allImages[0], tall: true },
+  { tag: 'Hospitality', name: 'Harbor Boutique Hotel', location: 'Goa, India', year: '2024', area: '18,000 sq ft', desc: 'A cinematic walkthrough for a luxury hospitality destination — immersive storytelling that transports guests before arrival.', img: allImages[3] },
+  { tag: 'Commercial', name: 'Monarch Studio', location: 'Pune, Maharashtra', year: '2023', area: '6,800 sq ft', desc: 'A premium architectural presentation designed for private investors and design showcases with interactive floor plans.', img: allImages[6] },
+  { tag: 'Luxury Villa', name: 'Vista Pavilion', location: 'Lonavala, Maharashtra', year: '2024', area: '9,500 sq ft', desc: 'An experiential 360° prototype built to impress before the physical build is complete — sold out pre-launch.', img: allImages[9], wide: true },
+  { tag: 'Interior', name: 'Amber Penthouse', location: 'Delhi NCR', year: '2023', area: '3,100 sq ft', desc: 'Editorial-quality interior showcase with spatial audio and curated material storytelling for ultra-luxury buyers.', img: allImages[12] },
+  { tag: 'Mixed Use', name: 'Crown Tower', location: 'Hyderabad, Telangana', year: '2024', area: '32,000 sq ft', desc: 'A landmark mixed-use development presented through a multi-floor immersive tour with live guided sessions.', img: allImages[15], tall: true },
+  { tag: 'Residential', name: 'Pearl Heights', location: 'Bangalore, Karnataka', year: '2023', area: '5,600 sq ft', desc: 'Luxury residential towers with a bespoke VR showcase that drove 80% pre-sales within the first month of launch.', img: allImages[18] },
+  { tag: 'Commercial', name: 'Sapphire Complex', location: 'Ahmedabad, Gujarat', year: '2024', area: '12,400 sq ft', desc: 'A polished corporate experience for investors and stakeholders with full visual storytelling.', img: allImages[21] },
+  { tag: 'Hospitality', name: 'The Grand Atrium', location: 'Jaipur, Rajasthan', year: '2024', area: '21,500 sq ft', desc: 'A high-impact hospitality experience designed for pre-launch engagement and luxury positioning.', img: allImages[24], wide: true },
+  { tag: 'Interior', name: 'Ivory Suite', location: 'Mumbai, Maharashtra', year: '2023', area: '2,800 sq ft', desc: 'An intimate interior concept with layered lighting and premium finishes rendered as an immersive experience.', img: allImages[27] },
+  { tag: 'Luxury Villa', name: 'Emerald Estate', location: 'Alibaug, Maharashtra', year: '2024', area: '11,200 sq ft', desc: 'A villa experience designed to feel private, luxurious, and cinematic from first glance.', img: allImages[30] },
+  { tag: 'Residential', name: 'Onyx Towers', location: 'Noida, Uttar Pradesh', year: '2024', area: '7,900 sq ft', desc: 'A multi-residence storytelling experience crafted to highlight lifestyle, scale, and aspiration.', img: allImages[33], tall: true },
+  { tag: 'Commercial', name: 'Platinum Hub', location: 'Chennai, Tamil Nadu', year: '2023', area: '14,600 sq ft', desc: 'A business-focused showcase designed for executive presentations and client-facing walkthroughs.', img: allImages[36] },
+  { tag: 'Interior', name: 'Velvet Loft', location: 'Delhi NCR', year: '2023', area: '3,600 sq ft', desc: 'An editorial interior concept that balances calm luxury with architectural drama.', img: allImages[39] },
+  { tag: 'Hospitality', name: 'Azure Resort', location: 'Kochi, Kerala', year: '2024', area: '25,000 sq ft', desc: 'A resort experience that blends hospitality storytelling with immersive digital presentation.', img: allImages[42] },
 ];
 
+function ProjectDetailModal({ project, onClose }) {
+  useEffect(() => {
+    document.body.style.overflow = project ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [project]);
+
+  if (!project) return null;
+
+  return (
+    <>
+      <div className="drawer-backdrop open" onClick={onClose} />
+      <aside className="drawer-panel fullscreen open">
+        <button className="drawer-close" onClick={onClose} aria-label="Close">✕</button>
+        <div className="drawer-img-wrap">
+          <img src={project.img} alt={project.name} className="drawer-main-img" />
+          <div className="drawer-img-overlay">
+            <span className="drawer-tag">{project.tag}</span>
+          </div>
+        </div>
+        <div className="drawer-body">
+          <div className="drawer-eyebrow">
+            <div className="eyebrow-line" />
+            <span>{project.tag}</span>
+          </div>
+          <h2 className="drawer-title">{project.name}</h2>
+          <p className="drawer-desc">{project.desc}</p>
+          <div className="drawer-meta">
+            <div className="drawer-meta-item">
+              <span className="drawer-meta-label">Location</span>
+              <span className="drawer-meta-val">{project.location}</span>
+            </div>
+            <div className="drawer-meta-item">
+              <span className="drawer-meta-label">Year</span>
+              <span className="drawer-meta-val">{project.year}</span>
+            </div>
+            <div className="drawer-meta-item">
+              <span className="drawer-meta-label">Area</span>
+              <span className="drawer-meta-val">{project.area}</span>
+            </div>
+            <div className="drawer-meta-item">
+              <span className="drawer-meta-label">Type</span>
+              <span className="drawer-meta-val">{project.tag}</span>
+            </div>
+          </div>
+          <div className="drawer-video-wrap">
+            <div className="drawer-video-label">
+              <span className="live-dot" />
+              <span>Live Walkthrough Preview</span>
+            </div>
+            <video autoPlay loop muted playsInline className="drawer-video" poster={project.img}>
+              <source src={videos[0]} type="video/mp4" />
+            </video>
+          </div>
+          <div className="drawer-actions">
+            <Link to="/contact" className="btn-gold" onClick={onClose}>Book a Private Tour</Link>
+            <Link to="/projects" className="btn-outline" onClick={onClose}>Back to Portfolio</Link>
+          </div>
+        </div>
+      </aside>
+    </>
+  );
+}
+
 function ProjectsPage() {
+  const [selectedProject, setSelectedProject] = useState(null);
+
   return (
     <>
       <section className="page-hero">
@@ -107,15 +173,25 @@ function ProjectsPage() {
         </div>
       </div>
 
+      <ProjectDetailModal project={selectedProject} onClose={() => setSelectedProject(null)} />
+
       {/* MASONRY PROJECTS */}
       <section className="section">
         <div className="projects-grid">
           {projects.map((p, i) => (
-            <div key={i} className={`project-card${p.tall ? ' tall' : ''}${p.wide ? ' wide' : ''}`}>
+            <div
+              key={i}
+              className={`project-card${p.tall ? ' tall' : ''}${p.wide ? ' wide' : ''}`}
+              onClick={() => setSelectedProject(p)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => e.key === 'Enter' && setSelectedProject(p)}
+            >
               <img src={p.img} alt={p.name} loading={i > 4 ? 'lazy' : 'eager'} />
               <div className="project-overlay">
                 <div className="project-tag">{p.tag}</div>
                 <div className="project-name">{p.name}</div>
+                <div className="project-view-hint">Click for details ◆</div>
               </div>
             </div>
           ))}

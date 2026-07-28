@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { gsap } from 'gsap';
 
 const allImages = [
   '/assets/WhatsApp Image 2026-07-27 at 2.16.29 PM (1).jpeg',
@@ -181,6 +182,22 @@ function Drawer({ item, onClose }) {
 
 function HomePage() {
   const [drawerItem, setDrawerItem] = useState(null);
+  const ambientRef = useRef(null);
+
+  useEffect(() => {
+    if (!ambientRef.current) return;
+    const orbs = ambientRef.current.querySelectorAll('.orb');
+    gsap.to(orbs, {
+      x: (i) => (i % 2 === 0 ? 30 : -30),
+      y: (i) => (i % 2 === 0 ? -20 : 20),
+      scale: (i) => (i % 2 === 0 ? 1.08 : 1.15),
+      duration: 5 + Math.random() * 3,
+      repeat: -1,
+      yoyo: true,
+      ease: 'sine.inOut',
+      stagger: 0.4,
+    });
+  }, []);
 
   return (
     <>
@@ -200,6 +217,11 @@ function HomePage() {
           <source src={videos[0]} type="video/mp4" />
         </video>
         <div className="hero-overlay" />
+        <div className="hero-ambient" ref={ambientRef}>
+          <div className="orb" style={{ width: '220px', height: '220px', left: '8%', top: '12%', background: 'radial-gradient(circle, rgba(231,183,193,0.26), transparent 70%)' }} />
+          <div className="orb" style={{ width: '320px', height: '320px', right: '6%', bottom: '10%', background: 'radial-gradient(circle, rgba(163,59,75,0.25), transparent 72%)' }} />
+          <div className="orb" style={{ width: '140px', height: '140px', left: '44%', top: '20%', background: 'radial-gradient(circle, rgba(255,255,255,0.16), transparent 70%)' }} />
+        </div>
         <div className="hero-content">
           <div className="hero-eyebrow">
             <div className="eyebrow-line" />
@@ -373,48 +395,19 @@ function HomePage() {
         </div>
       </section>
 
-      {/* ── FULL GALLERY (section-wise) ── */}
-      <section className="section">
+      {/* ── PROJECTS CTA ── */}
+      <section className="section section-compact">
         <div className="section-header">
           <div className="section-eyebrow">
             <div className="eyebrow-line" />
             <span>Visual Portfolio</span>
           </div>
-          <h2 className="section-title">Our <em>Gallery</em></h2>
+          <h2 className="section-title">Explore the full <em>project gallery</em></h2>
+          <p className="section-desc">The complete image-rich portfolio now lives on the projects page so the home page remains elegant, focused, and conversion-driven.</p>
         </div>
-
-        {gallerySections.map((sec, secIdx) => (
-          <div key={secIdx} className="gallery-section-block">
-            <div className="gallery-section-label">
-              <span className="gallery-section-num">0{secIdx + 1}</span>
-              <span className="gallery-section-title">{sec.label}</span>
-              <div className="gallery-section-line" />
-            </div>
-            <div className="gallery-masonry">
-              {sec.images.map((src, i) => {
-                const globalIdx = allImages.indexOf(src);
-                const isTall = i === 0 || i === sec.images.length - 1;
-                return (
-                  <div
-                    key={i}
-                    className={`gallery-item${isTall ? ' tall' : ''}`}
-                    onClick={() => setDrawerItem(galleryProjects[globalIdx] || galleryProjects[0])}
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={(e) => e.key === 'Enter' && setDrawerItem(galleryProjects[globalIdx] || galleryProjects[0])}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <img src={src} alt={`${sec.label} ${i + 1}`} loading="lazy" />
-                    <div className="gallery-hover-overlay">
-                      <span className="gallery-section-tag">{sec.label}</span>
-                      <span className="gallery-hover-icon">◆</span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        ))}
+        <div style={{ textAlign: 'center' }}>
+          <Link to="/projects" className="btn-gold">See Full Gallery</Link>
+        </div>
       </section>
 
       {/* ── TESTIMONIAL ── */}
