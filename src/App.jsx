@@ -23,26 +23,76 @@ function Loader({ done }) {
 
 function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 40);
     window.addEventListener('scroll', fn);
     return () => window.removeEventListener('scroll', fn);
   }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [menuOpen]);
+
   return (
-    <header className={`topbar${scrolled ? ' scrolled' : ''}`}>
-      <Link to="/" className="brand">
-        <div className="brand-badge">
-          <img src="/assets/logo.png" alt="Ashutosh Building" />
+    <>
+      <header className={`topbar${scrolled ? ' scrolled' : ''}`}>
+        <Link to="/" className="brand" onClick={() => setMenuOpen(false)}>
+          <div className="brand-badge">
+            <img src="/assets/logo.png" alt="Ashutosh Building" />
+          </div>
+        </Link>
+
+        <nav className="nav-links">
+          <NavLink to="/" end>Home</NavLink>
+          <NavLink to="/about">About</NavLink>
+          <NavLink to="/services">Services</NavLink>
+          <NavLink to="/projects">Projects</NavLink>
+          <NavLink to="/contact" className="nav-cta">Book a Tour</NavLink>
+        </nav>
+
+        <button
+          className={`mobile-menu-toggle${menuOpen ? ' active' : ''}`}
+          onClick={() => setMenuOpen((prev) => !prev)}
+          aria-label="Toggle navigation"
+          aria-expanded={menuOpen}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
+      </header>
+
+      <div className={`mobile-drawer-backdrop${menuOpen ? ' open' : ''}`} onClick={() => setMenuOpen(false)} />
+
+      <div className={`mobile-drawer${menuOpen ? ' open' : ''}`}>
+        <div className="mobile-drawer-head">
+          <Link to="/" className="brand" onClick={() => setMenuOpen(false)}>
+            <div className="brand-badge">
+              <img src="/assets/logo.png" alt="Ashutosh Building" />
+            </div>
+          </Link>
+          <button className="mobile-drawer-close" onClick={() => setMenuOpen(false)} aria-label="Close menu">
+            ×
+          </button>
         </div>
-      </Link>
-      <nav className="nav-links">
-        <NavLink to="/" end>Home</NavLink>
-        <NavLink to="/about">About</NavLink>
-        <NavLink to="/services">Services</NavLink>
-        <NavLink to="/projects">Projects</NavLink>
-        <NavLink to="/contact" className="nav-cta">Book a Tour</NavLink>
-      </nav>
-    </header>
+
+        <nav className="mobile-drawer-nav">
+          <NavLink to="/" end onClick={() => setMenuOpen(false)}>Home</NavLink>
+          <NavLink to="/about" onClick={() => setMenuOpen(false)}>About</NavLink>
+          <NavLink to="/services" onClick={() => setMenuOpen(false)}>Services</NavLink>
+          <NavLink to="/projects" onClick={() => setMenuOpen(false)}>Projects</NavLink>
+        </nav>
+
+        <Link to="/contact" className="mobile-drawer-cta" onClick={() => setMenuOpen(false)}>
+          Book a Tour
+        </Link>
+      </div>
+    </>
   );
 }
 
